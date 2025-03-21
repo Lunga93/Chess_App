@@ -1,0 +1,10 @@
+# Ignore compiled Java class files
+*.class
+
+# Ignore any build directories (if you add them later)
+/build/
+/target/
+
+# Ignore IDE-specific files (optional, if you use an IDE)
+.idea/
+*.iml
