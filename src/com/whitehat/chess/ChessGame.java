@@ -17,34 +17,33 @@ public class ChessGame {
         checkIfInCheck();
 
         int[] move;
-        while ((move = input.getNextMove()) != null) {
-            int startX = move[0];
-            int startY = move[1];
-            int endX = move[2];
-            int endY = move[3];
-
-            String moveStr = "" + (char)('a' + startY) + (startX + 1) +
-                            " to " + (char)('a' + endY) + (endX + 1);
-            System.out.println("\nAttempting move: " + moveStr);
-
-            if (isValidMove(startX, startY, endX, endY)) {
-                ChessPiece captured = board.getPiece(endX, endY);
-                board.movePiece(startX, startY, endX, endY);
-                if (isInCheck(board.isWhiteTurn())) {
-                    System.out.println("Invalid move: puts own king in check");
-                    board.undoMove(startX, startY, endX, endY, captured);
-                } else {
-                    board.printBoard();
-                    checkIfInCheck();
-                }
-            } else {
-                System.out.println("Invalid move: " + moveStr);
-            }
-        }
         try {
-            input.close();
-        } catch (Exception e) {
-            System.err.println("Error closing input: " + e.getMessage());
+            while ((move = input.nextMove()) != null) { // Updated to nextMove()
+                int startCol = move[0]; // Column (0-7, a-h)
+                int startRow = move[1]; // Row (0-7, rank 8-1)
+                int endCol = move[2];   // Column
+                int endRow = move[3];   // Row
+
+                String moveStr = "" + (char)('a' + startCol) + (8 - startRow) +
+                                " to " + (char)('a' + endCol) + (8 - endRow);
+                System.out.println("\nAttempting move: " + moveStr);
+
+                if (isValidMove(startRow, startCol, endRow, endCol)) {
+                    ChessPiece captured = board.getPiece(endRow, endCol);
+                    board.movePiece(startRow, startCol, endRow, endCol);
+                    if (isInCheck(board.isWhiteTurn())) {
+                        System.out.println("Invalid move: puts own king in check");
+                        board.undoMove(startRow, startCol, endRow, endCol, captured);
+                    } else {
+                        board.printBoard();
+                        checkIfInCheck();
+                    }
+                } else {
+                    System.out.println("Invalid move: " + moveStr);
+                }
+            }
+        } catch (java.io.IOException e) {
+            System.err.println("Error reading moves: " + e.getMessage());
         }
     }
 
