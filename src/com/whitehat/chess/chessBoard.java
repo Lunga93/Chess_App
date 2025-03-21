@@ -1,4 +1,4 @@
-package com.Whitehat.chess;
+package com.whitehat.chess;
 
 public class chessBoard {
     
