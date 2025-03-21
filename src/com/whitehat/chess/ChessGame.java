@@ -18,11 +18,11 @@ public class ChessGame {
 
         int[] move;
         try {
-            while ((move = input.nextMove()) != null) { // Updated to nextMove()
-                int startCol = move[0]; // Column (0-7, a-h)
-                int startRow = move[1]; // Row (0-7, rank 8-1)
-                int endCol = move[2];   // Column
-                int endRow = move[3];   // Row
+            while ((move = input.nextMove()) != null) {
+                int startCol = move[0];
+                int startRow = move[1];
+                int endCol = move[2];
+                int endRow = move[3];
 
                 String moveStr = "" + (char)('a' + startCol) + (8 - startRow) +
                                 " to " + (char)('a' + endCol) + (8 - endRow);
@@ -55,7 +55,8 @@ public class ChessGame {
 
         ChessPiece piece = board.getPiece(startX, startY);
         ChessPiece target = board.getPiece(endX, endY);
-        boolean isWhitePiece = (startX <= 1 || (startX > 1 && piece != ChessPiece.EMPTY));
+        // Correctly determine piece color based on initial position
+        boolean isWhitePiece = (startX <= 1); // White pieces start on rows 0-1
 
         if (piece == ChessPiece.EMPTY || (isWhitePiece != board.isWhiteTurn()) ||
             (target != ChessPiece.EMPTY && (isWhitePiece == (endX <= 1)))) {
