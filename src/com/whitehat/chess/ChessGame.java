@@ -4,8 +4,8 @@ import com.whitehatgaming.UserInput;
 import com.whitehatgaming.UserInputFile;
 
 public class ChessGame {
-    private ChessBoard board;
-    private UserInput input;
+    private final ChessBoard board;
+    private final UserInput input;
 
     public ChessGame(String filePath) throws Exception {
         board = new ChessBoard();
@@ -48,6 +48,7 @@ public class ChessGame {
     }
 
     private boolean isValidMove(int startX, int startY, int endX, int endY) {
+        // Bounds check
         if (startX < 0 || startX > 7 || startY < 0 || startY > 7 ||
             endX < 0 || endX > 7 || endY < 0 || endY > 7) {
             return false;
@@ -55,74 +56,23 @@ public class ChessGame {
 
         ChessPiece piece = board.getPiece(startX, startY);
         ChessPiece target = board.getPiece(endX, endY);
-        // Correctly determine piece color based on initial position
-        boolean isWhitePiece = (startX <= 1); // White pieces start on rows 0-1
+        boolean isWhitePiece = (startX <= 1); // White pieces on rows 0-1
 
+        // Basic move rules
         if (piece == ChessPiece.EMPTY || (isWhitePiece != board.isWhiteTurn()) ||
             (target != ChessPiece.EMPTY && (isWhitePiece == (endX <= 1)))) {
             return false;
         }
 
-        int dx = Math.abs(endX - startX);
-        int dy = Math.abs(endY - startY);
-
-        switch (piece) {
-            case KING:
-                return dx <= 1 && dy <= 1;
-            case QUEEN:
-                return isPathClear(startX, startY, endX, endY) && (dx == dy || dx == 0 || dy == 0);
-            case ROOK:
-                return isPathClear(startX, startY, endX, endY) && (dx == 0 || dy == 0);
-            case BISHOP:
-                return isPathClear(startX, startY, endX, endY) && dx == dy;
-            case KNIGHT:
-                return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
-            case PAWN:
-                return isValidPawnMove(startX, startY, endX, endY, isWhitePiece);
-            default:
-                return false;
-        }
-    }
-
-    private boolean isPathClear(int startX, int startY, int endX, int endY) {
-        int dx = Integer.compare(endX, startX);
-        int dy = Integer.compare(endY, startY);
-        int x = startX + dx;
-        int y = startY + dy;
-
-        while (x != endX || y != endY) {
-            if (board.getPiece(x, y) != ChessPiece.EMPTY) return false;
-            x += dx;
-            y += dy;
-        }
-        return true;
-    }
-
-    private boolean isValidPawnMove(int startX, int startY, int endX, int endY, boolean isWhite) {
-        int direction = isWhite ? 1 : -1;
-        int startRow = isWhite ? 1 : 6;
-        int dx = endX - startX;
-        int dy = Math.abs(endY - startY);
-
-        if (dy == 0 && board.getPiece(endX, endY) == ChessPiece.EMPTY) {
-            if (dx == direction) return true;
-            if (dx == 2 * direction && startX == startRow &&
-                board.getPiece(startX + direction, startY) == ChessPiece.EMPTY) {
-                return true;
-            }
-        }
-        if (dx == direction && dy == 1 && board.getPiece(endX, endY) != ChessPiece.EMPTY) {
-            return true;
-        }
-        return false;
+        // Delegate to piece-specific validation
+        return piece.isValidMove(startX, startY, endX, endY, board, isWhitePiece);
     }
 
     private boolean isInCheck(boolean white) {
         int kingX = -1, kingY = -1;
         for (int i = 0; i < 8 && kingX == -1; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board.getPiece(i, j) == ChessPiece.KING &&
-                    ((i <= 1) == white)) {
+                if (board.getPiece(i, j) == ChessPiece.KING && (i <= 1) == white) {
                     kingX = i;
                     kingY = j;
                     break;
@@ -132,9 +82,12 @@ public class ChessGame {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
+                ChessPiece piece = board.getPiece(i, j);
                 boolean isOpponent = (i <= 1) != white;
-                if (isOpponent && board.getPiece(i, j) != ChessPiece.EMPTY) {
-                    if (isValidMove(i, j, kingX, kingY)) return true;
+                if (isOpponent && piece != ChessPiece.EMPTY) {
+                    if (piece.isValidMove(i, j, kingX, kingY, board, !white)) {
+                        return true;
+                    }
                 }
             }
         }

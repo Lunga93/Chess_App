@@ -35,7 +35,7 @@ public class ChessBoard {
         for (int i = 7; i >= 0; i--) {
             System.out.print((i + 1) + " ");
             for (int j = 0; j < 8; j++) {
-                boolean isWhite = (i <= 1 || (i > 1 && board[i][j] == ChessPiece.EMPTY));
+                boolean isWhite = (i <= 1); // White pieces on rows 0-1
                 System.out.print(board[i][j].getSymbol(isWhite) + " ");
             }
             System.out.println((i + 1));
@@ -62,5 +62,18 @@ public class ChessBoard {
         board[startX][startY] = board[endX][endY];
         board[endX][endY] = captured;
         whiteTurn = !whiteTurn;
+    }
+
+    public boolean isPathClear(int startX, int startY, int endX, int endY) {
+        int dx = Integer.compare(endX, startX);
+        int dy = Integer.compare(endY, startY);
+        int x = startX + dx;
+        int y = startY + dy;
+        while (x != endX || y != endY) {
+            if (getPiece(x, y) != ChessPiece.EMPTY) return false;
+            x += dx;
+            y += dy;
+        }
+        return true;
     }
 }
