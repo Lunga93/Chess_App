@@ -1,7 +1,7 @@
 package com.whitehat.chess;
 
 public class ChessBoard {
-    private ChessPiece[][] board;
+    private final ChessPiece[][] board;
     private boolean whiteTurn;
 
     public ChessBoard() {
