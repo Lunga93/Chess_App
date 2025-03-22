@@ -69,7 +69,7 @@ public class ChessGame {
 
         ChessPiece piece = board.getPiece(startX, startY);
         ChessPiece target = board.getPiece(endX, endY);
-        boolean isWhitePiece = (startX >= 6);  // White on rows 6-7
+        boolean isWhitePiece = board.isWhitePiece(startX, startY);
         System.out.println("Piece: " + piece + ", Target: " + target + ", Is White: " + isWhitePiece + ", Current Turn: " + (board.isWhiteTurn() ? "White" : "Black"));
 
         if (piece == ChessPiece.EMPTY) {
@@ -80,7 +80,7 @@ public class ChessGame {
             System.out.println("Move rejected: Wrong player's turn.");
             return false;
         }
-        if (target != ChessPiece.EMPTY && (isWhitePiece == (endX >= 6))) {
+        if (target != ChessPiece.EMPTY && isWhitePiece == board.isWhitePiece(endX, endY)) {
             System.out.println("Move rejected: Cannot capture own piece.");
             return false;
         }
@@ -96,7 +96,7 @@ public class ChessGame {
         int kingX = -1, kingY = -1;
         for (int i = 0; i < 8 && kingX == -1; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board.getPiece(i, j) == ChessPiece.KING && (i >= 6) == white) {
+                if (board.getPiece(i, j) == ChessPiece.KING && board.isWhitePiece(i, j) == white) {
                     kingX = i;
                     kingY = j;
                     System.out.println("Found king at [" + kingX + "," + kingY + "]");
@@ -108,7 +108,7 @@ public class ChessGame {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPiece piece = board.getPiece(i, j);
-                boolean isOpponent = (i >= 6) != white;
+                boolean isOpponent = board.isWhitePiece(i, j) != white;
                 if (isOpponent && piece != ChessPiece.EMPTY) {
                     if (piece.isValidMove(i, j, kingX, kingY, board, !white)) {
                         System.out.println("Check detected: " + piece + " can attack king.");
@@ -141,7 +141,6 @@ public class ChessGame {
             game.play();
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
         }
         System.out.println("ChessGame execution finished.");
     }
