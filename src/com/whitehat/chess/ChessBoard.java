@@ -1,13 +1,18 @@
 package com.whitehat.chess;
 
 public class ChessBoard {
-    private static class Piece {
+    public static class Piece {
         ChessPiece type;
         boolean isWhite;
 
         Piece(ChessPiece type, boolean isWhite) {
             this.type = type;
             this.isWhite = isWhite;
+        }
+
+        Piece(Piece other) {
+            this.type = other.type;
+            this.isWhite = other.isWhite;
         }
     }
 
@@ -21,13 +26,12 @@ public class ChessBoard {
     }
 
     private void initializeBoard() {
-        System.out.println("Initializing board...");
+        System.out.println("[INFO] Initializing board...");
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 board[i][j] = new Piece(ChessPiece.EMPTY, false);
             }
         }
-        // Black pieces (rows 0-1, ranks 8-7)
         board[0][0] = board[0][7] = new Piece(ChessPiece.ROOK, false);
         board[0][1] = board[0][6] = new Piece(ChessPiece.KNIGHT, false);
         board[0][2] = board[0][5] = new Piece(ChessPiece.BISHOP, false);
@@ -35,14 +39,12 @@ public class ChessBoard {
         board[0][4] = new Piece(ChessPiece.KING, false);
         for (int j = 0; j < 8; j++) board[1][j] = new Piece(ChessPiece.PAWN, false);
 
-        // White pieces (rows 6-7, ranks 2-1)
         board[7][0] = board[7][7] = new Piece(ChessPiece.ROOK, true);
         board[7][1] = board[7][6] = new Piece(ChessPiece.KNIGHT, true);
         board[7][2] = board[7][5] = new Piece(ChessPiece.BISHOP, true);
         board[7][3] = new Piece(ChessPiece.QUEEN, true);
         board[7][4] = new Piece(ChessPiece.KING, true);
         for (int j = 0; j < 8; j++) board[6][j] = new Piece(ChessPiece.PAWN, true);
-        System.out.println("Board initialized.");
     }
 
     public ChessPiece getPiece(int x, int y) {
@@ -54,16 +56,14 @@ public class ChessBoard {
     }
 
     public void movePiece(int startX, int startY, int endX, int endY) {
-        System.out.println("Moving piece from [" + startX + "," + startY + "] to [" + endX + "," + endY + "]");
-        board[endX][endY] = board[startX][startY];
+        board[endX][endY] = new Piece(board[startX][startY]);
         board[startX][startY] = new Piece(ChessPiece.EMPTY, false);
         whiteTurn = !whiteTurn;
     }
 
-    public void undoMove(int startX, int startY, int endX, int endY, ChessPiece captured) {
-        System.out.println("Undoing move from [" + startX + "," + startY + "] to [" + endX + "," + endY + "]");
-        board[startX][startY] = board[endX][endY];
-        board[endX][endY] = new Piece(captured, false);  // Captured piece assumed Black for simplicity, adjust if needed
+    public void undoMove(int startX, int startY, int endX, int endY, Piece captured) {
+        board[startX][startY] = new Piece(board[endX][endY]);
+        board[endX][endY] = captured != null ? new Piece(captured) : new Piece(ChessPiece.EMPTY, false);
         whiteTurn = !whiteTurn;
     }
 
@@ -72,20 +72,17 @@ public class ChessBoard {
     }
 
     public boolean isPathClear(int startX, int startY, int endX, int endY) {
-        System.out.println("Checking path from [" + startX + "," + startY + "] to [" + endX + "," + endY + "]");
         int dx = Integer.compare(endX, startX);
         int dy = Integer.compare(endY, startY);
         int x = startX + dx;
         int y = startY + dy;
         while (x != endX || y != endY) {
             if (board[x][y].type != ChessPiece.EMPTY) {
-                System.out.println("Path blocked at [" + x + "," + y + "]");
                 return false;
             }
             x += dx;
             y += dy;
         }
-        System.out.println("Path clear.");
         return true;
     }
 
