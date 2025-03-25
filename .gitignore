@@ -8,3 +8,4 @@
 # Ignore IDE-specific files (optional, if you use an IDE)
 .idea/
 *.iml
+.fake

@@ -5,12 +5,12 @@ public class ChessBoard {
         ChessPiece type;
         boolean isWhite;
 
-        Piece(ChessPiece type, boolean isWhite) {
+        public Piece(ChessPiece type, boolean isWhite) {
             this.type = type;
             this.isWhite = isWhite;
         }
 
-        Piece(Piece other) {
+        public Piece(Piece other) {
             this.type = other.type;
             this.isWhite = other.isWhite;
         }

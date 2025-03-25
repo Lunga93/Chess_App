@@ -1,4 +1,4 @@
-package test.java.com.whitehat.chess;  // Matches src/test/java/com/whitehat/chess/
+package com.whitehat.chess;  // Matches src/test/java/com/whitehat/chess/
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
