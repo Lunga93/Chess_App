@@ -88,20 +88,20 @@ public class ChessBoardTest {
         assertFalse(ChessPiece.KNIGHT.isValidMove(7, 1, 6, 1, board, true));
     }
 
-//    @Test
-//    public void testBishopValidMove() {
-//        board.movePiece(6, 2, 4, 2);
-//        assertTrue(ChessPiece.BISHOP.isValidMove(7, 2, 5, 0, board, true)); // Diagonal
-//        assertFalse(ChessPiece.BISHOP.isValidMove(7, 2, 5, 1, board, true));
-//    }
-//
-//    @Test
-//    public void testQueenValidMove() {
-//        board.movePiece(6, 3, 4, 3);
-//        assertTrue(ChessPiece.QUEEN.isValidMove(7, 3, 5, 3, board, true));
-//        assertTrue(ChessPiece.QUEEN.isValidMove(7, 3, 5, 1, board, true)); // Diagonal
-//        assertFalse(ChessPiece.QUEEN.isValidMove(7, 3, 5, 2, board, true));
-//    }
+    @Test
+    public void testBishopValidMove() {
+        board.movePiece(6, 1, 4, 2);
+        assertTrue(ChessPiece.BISHOP.isValidMove(7, 2, 5, 0, board, true)); // Diagonal
+        assertFalse(ChessPiece.BISHOP.isValidMove(7, 2, 5, 1, board, true));
+    }
+
+    @Test
+    public void testQueenValidMove() {
+        board.movePiece(6, 2, 4, 3);
+        assertFalse(ChessPiece.QUEEN.isValidMove(7, 3, 5, 3, board, true));
+        assertTrue(ChessPiece.QUEEN.isValidMove(7, 3, 5, 1, board, true)); // Diagonal
+        assertFalse(ChessPiece.QUEEN.isValidMove(7, 3, 5, 2, board, true));
+    }
 
     @Test
     public void testIsPathClear() {
