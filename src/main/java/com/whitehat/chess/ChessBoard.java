@@ -1,4 +1,4 @@
-package com.whitehat.chess;
+package main.java.com.whitehat.chess;
 
 public class ChessBoard {
     public static class Piece {

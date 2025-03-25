@@ -1,4 +1,4 @@
-package com.whitehat.chess;
+package main.java.com.whitehat.chess;
 
 import com.whitehatgaming.UserInput;
 import com.whitehatgaming.UserInputFile;
